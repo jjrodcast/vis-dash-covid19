@@ -24,10 +24,10 @@ def create_demographic(types, depts, data = None):
     graphic_by_age = dcc.Graph(id='graph_cases_by_age', figure=create_age_group_layout(data))
     graphic_by_sex = dcc.Graph(id='graph_cases_by_sex', figure=create_sex_group_layout(data))
     
-    graphic_left = html.Div(className='six columns', children=[graphic_by_age])
-    graphic_right = html.Div(className='six columns', children=[graphic_by_sex])
+    #graphic_left = html.Div(className='six columns', children=[graphic_by_age])
+    #graphic_right = html.Div(className='six columns', children=[graphic_by_sex])
 
-    containerLayout = html.Div(className='row', children=[graphic_left, graphic_right])
+    containerLayout = html.Div(className='row', children=[graphic_by_age, graphic_by_sex])
     
     container = html.Div(children=[title, containerFilters, containerLayout])
 

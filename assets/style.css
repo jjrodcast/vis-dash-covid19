@@ -652,11 +652,11 @@ hr {
 }
 
 .rc-slider-dot-active, .rc-slider-handle {
-    border-color: #2cfec1 !important;
+    border-color: #5766a7 !important;
 }
 
 .rc-slider-track {
-    background-color: #2cfec1 !important
+    background-color: #5766a7 !important
 }
 
 .rc-slider-rail {

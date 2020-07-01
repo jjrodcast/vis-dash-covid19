@@ -15,9 +15,9 @@ def create_header(app):
 def create_tabs():
     tab_items = [
         dcc.Tab(label='Tab 1', value='tab1'),
-        dcc.Tab(label='Tab 2', value='tab2'),
+        dcc.Tab(label='Tasa de Contagio', value='tab2'),
         dcc.Tab(label='Tab 3', value='tab3'),
-        dcc.Tab(label='Positivos / Fallecidos', value='tab4'),
+        dcc.Tab(label='Información por Edad y Sexo', value='tab4'),
         dcc.Tab(label='Tab 5', value='tab5')
     ]
 
