@@ -1,5 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import plotly.graph_objects as go
 import plotly.express as px
 
 def __create_filters(types, depts):
@@ -13,7 +14,7 @@ def __create_filters(types, depts):
 
 def create_proves(types, depts, _type, _geojson, data):
     title = html.H4(children='Pruebas PCR / PR', className='center')
-    
+    title_table = html.H4(children='Información General', className='center')
     _types, _deps = __create_filters(types, depts)
 
     left =  html.Div(className='six columns', children=_types)
@@ -22,11 +23,11 @@ def create_proves(types, depts, _type, _geojson, data):
 
     graphic_map = dcc.Graph(id='graph_map_proves', figure=create_map_proves_figure(_type, _geojson, data))
 
-    graphic_left = html.Div(className='six columns', children=[graphic_map])
-
     containerGraphics = html.Div(className='row', children=[graphic_map])
 
-    container =  html.Div(children=[title, containerFilters, containerGraphics, html.Div(id='temp')])
+    info = html.Div(id='info_prove_dept')
+
+    container =  html.Div(children=[title, containerFilters, containerGraphics, info])
 
     return container
 
@@ -44,3 +45,13 @@ def create_map_proves_figure(_type, _geojson, data):
     figure.update_layout(clickmode='event+select', title_text=title)
 
     return figure
+
+def create_info(data):
+    _dep = data['NOMBDEP'].values[0]
+    _pr = data['PR'].values[0]
+    _pcr = data['PCR'].values[0]
+    dept = html.Div(className='row', children=[html.Span('DEPARTAMENTO: ', style={'fontWeight': 'bold'}), html.Span(_dep)])
+    pr = html.Div(className='row', children=[html.Span('PRUEBAS RÁPIDAS: ', style={'fontWeight': 'bold'}), html.Span(f'{int(_pr):,}')])
+    pcr = html.Div(className='row', children=[html.Span('PRUEBAS MOLECULARES: ', style={'fontWeight': 'bold'}), html.Span(f'{int(_pcr):,}')])
+
+    return html.Div(children=[dept, pr, pcr])

@@ -19,6 +19,8 @@ from demographic.demograhic_data import *
 from proves.tab_proves import *
 from proves.proves_data import *
 
+from consumos import graph_consumos as utils_cons
+
 #region Data
 demographic = DemographicData()
 data = demographic.getInfoByAgeGroup()
@@ -59,7 +61,7 @@ def render_tabs(tab):
     elif tab == 'tab2':
         return create_days_r(daysDep)
     elif tab == 'tab3':
-        return html.Div([html.H4('Tab 3 Content')])
+        return utils_cons.build_tab_consumos()
     elif tab == 'tab4':
         return create_demographic(demographic.getLocations(), demographic.getDepartments(), data)
     elif tab == 'tab5':
@@ -100,7 +102,7 @@ def render_days_data(dprto, tiempo):
 def render_tests(_type, deps):
     return create_map_proves_figure(_type, geojson, provesData.getData(_type, deps))
 
-@app.callback(Output('temp', 'children'),
+@app.callback(Output('info_prove_dept', 'children'),
              [Input('graph_map_proves', 'clickData')])
 def display_click_data(clickData):
     if clickData is None:
@@ -108,8 +110,23 @@ def display_click_data(clickData):
     else:
         dep = clickData['points'][0]['location']
         cod = ''.join(dep.split(' '))[:5]
-        return html.P(dep + ' - ' + cod)
+        return create_info(provesData.getDataByCode(cod))
 #endregion
+
+#region Callback Consumos
+@app.callback([Output('id_graf_evol_transacciones_dinamico', 'figure'),
+               Output('id_graf_evol_monto_dinamico', 'figure')],
+              [Input('id_radioItems_digital', 'value'),
+              Input('id_dropdown_categoriaconsumo', 'value'),
+              Input('id_dropdown_subcategoriaconsumo', 'value'),
+              Input('id_radioItems_nacionalidad', 'value'),
+              Input('id_dropdown_grupo_region', 'value'),
+              Input('id_dropdown_region', 'value')])
+def actualizar_grafico(sel_digital,sel_cat, sel_subcat,sel_nac,sel_gRegion, sel_region):
+    return [utils_cons.fx_actualizar_grafico_compras(sel_digital,sel_cat,sel_subcat,sel_nac,sel_gRegion,sel_region,valor='transacciones'),
+           utils_cons.fx_actualizar_grafico_compras(sel_digital,sel_cat,sel_subcat,sel_nac,sel_gRegion,sel_region,valor='monto')]
+#endregion
+
 
 #region Ejecutar página
 if __name__ == '__main__':

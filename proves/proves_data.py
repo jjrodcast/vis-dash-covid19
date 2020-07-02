@@ -26,3 +26,6 @@ class ProvesData:
             data.loc[rows, _type] = 0
             
         return data
+    
+    def getDataByCode(self, cod_dept):
+        return self.data[self.data['COD'] == cod_dept]

@@ -10,14 +10,14 @@ def create_header(app):
     h4 = html.H4(children="Visualización de Datos")
     p = html.P(id='description',
               children='El proyecto muestra información relacionada al COVID-19 \
-              que en estos últimos meses ha afectado a toda la población. Los datos mostrados son los que nos brinda el MINSA.')
+              que en estos últimos meses ha afectado a toda la población. Los datos mostrados son los que nos brinda el MINSA. Datos actualizados hasta el 10/06/2020')
     return [logo, h4, p]
 
 def create_tabs():
     tab_items = [
         dcc.Tab(label='Tab 1', value='tab1'),
         dcc.Tab(label='Tasa de Contagio', value='tab2'),
-        dcc.Tab(label='Tab 3', value='tab3'),
+        dcc.Tab(label='Comportamiento de Compras', value='tab3'),
         dcc.Tab(label='Información por Edad y Sexo', value='tab4'),
         dcc.Tab(label='Tab 5', value='tab5'),
         dcc.Tab(label='Pruebas Rápidas y Moleculares', value='tab6')
