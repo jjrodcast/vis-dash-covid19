@@ -1,3 +1,4 @@
+import json
 import dash_html_components as html
 import dash_core_components as dcc
 
@@ -18,10 +19,17 @@ def create_tabs():
         dcc.Tab(label='Tasa de Contagio', value='tab2'),
         dcc.Tab(label='Tab 3', value='tab3'),
         dcc.Tab(label='Información por Edad y Sexo', value='tab4'),
-        dcc.Tab(label='Tab 5', value='tab5')
+        dcc.Tab(label='Tab 5', value='tab5'),
+        dcc.Tab(label='Pruebas Rápidas y Moleculares', value='tab6')
     ]
 
-    tabs = dcc.Tabs(id='tabs', value='tab4', children=tab_items)
+    tabs = dcc.Tabs(id='tabs', value='tab6', children=tab_items)
     content = html.Div(id='tabs-content')
 
     return [tabs, content]
+
+def get_geojson():
+    peru_geoson = None
+    with open('map/peru_departamental_simple.geojson') as f:
+        peru_geoson = json.load(f)
+    return peru_geoson

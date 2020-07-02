@@ -16,13 +16,19 @@ from days.days_data import *
 from demographic.tab_demographic import *
 from demographic.demograhic_data import *
 
+from proves.tab_proves import *
+from proves.proves_data import *
+
 #region Data
 demographic = DemographicData()
 data = demographic.getInfoByAgeGroup()
 
 daysData = DaysData()
 daysDep = daysData.getDepartamentos()
-#endregion
+
+
+geojson = get_geojson()
+provesData = ProvesData()
 
 #region Configuración Dash
 app = dash.Dash(
@@ -57,7 +63,9 @@ def render_tabs(tab):
     elif tab == 'tab4':
         return create_demographic(demographic.getLocations(), demographic.getDepartments(), data)
     elif tab == 'tab5':
-        return html.Div([html.H4('Tab 5 Content')])                
+        return html.Div([html.H4('Tab 5 Content')])
+    elif tab == 'tab6':
+        return create_proves(provesData.getProvesType(), provesData.getDepartments(), 'PR', geojson, provesData.getData())           
 #endregion 
 
 #region Callback Demographic
@@ -81,9 +89,26 @@ def render_sex_group(_type, deps):
     [Input(component_id='departamentos', component_property='value'),
     Input(component_id='tiempo', component_property='value')])
 def render_days_data(dprto, tiempo):
-    print(dprto, tiempo)
     ddata = daysData.getInfoByTime(tiempo)
     return create_days_figure(dprto, tiempo, ddata)
+#endregion
+
+#region Callback Pruebas PR/PCR
+@app.callback(Output('graph_map_proves', 'figure'),
+              [Input('dd-prove-type', 'value'),
+               Input('dd-prove-dep', 'value')])
+def render_tests(_type, deps):
+    return create_map_proves_figure(_type, geojson, provesData.getData(_type, deps))
+
+@app.callback(Output('temp', 'children'),
+             [Input('graph_map_proves', 'clickData')])
+def display_click_data(clickData):
+    if clickData is None:
+        return html.Div()
+    else:
+        dep = clickData['points'][0]['location']
+        cod = ''.join(dep.split(' '))[:5]
+        return html.P(dep + ' - ' + cod)
 #endregion
 
 #region Ejecutar página
