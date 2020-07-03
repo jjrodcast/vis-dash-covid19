@@ -13,7 +13,7 @@ def __create_filters(types, depts):
     return ([labelType, selectorTypes],[labelDep, selectorDep])
 
 def create_proves(types, depts, _type, _geojson, data):
-    title = html.H4(children='Pruebas PCR / PR', className='center')
+    title = html.H4(children='Pruebas PR/PCR', className='center')
     title_table = html.H4(children='Información General', className='center')
     _types, _deps = __create_filters(types, depts)
 

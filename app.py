@@ -19,6 +19,12 @@ from demographic.demograhic_data import *
 from proves.tab_proves import *
 from proves.proves_data import *
 
+from letalidad.tab_letalidad import *
+from letalidad.letalidad_data import *
+
+from death_cases.data_death import *
+from death_cases.graphic_data import *
+
 from consumos import graph_consumos as utils_cons
 
 #region Data
@@ -28,9 +34,17 @@ data = demographic.getInfoByAgeGroup()
 daysData = DaysData()
 daysDep = daysData.getDepartamentos()
 
-
 geojson = get_geojson()
 provesData = ProvesData()
+
+letalidad = LetalidadData()
+dataLetalidad = letalidad.getInfo()
+
+death_cases = DeathData()
+positivos = death_cases.datos()[0]
+fallecidos = death_cases.datos()[1]
+grafico = Graphic()
+#endregion
 
 #region Configuración Dash
 app = dash.Dash(
@@ -57,17 +71,18 @@ app.layout = html.Div(
               [Input('tabs','value')])
 def render_tabs(tab):
     if tab == 'tab1':
-        return html.Div([html.H4('Visualización de Datos')])
+        return create_proves(provesData.getProvesType(), provesData.getDepartments(), 'PR', geojson, provesData.getData())
     elif tab == 'tab2':
-        return create_days_r(daysDep)
+        return html.Div(children=[html.H4(children='Casos positivos y fallecidos en el tiempo'),
+                                  dcc.Graph(id='ejemplo', figure= grafico.Grap_Time_Serie(positivos,fallecidos))])
     elif tab == 'tab3':
-        return utils_cons.build_tab_consumos()
+        return create_barplot(letalidad.getDepartments(), dataLetalidad)
     elif tab == 'tab4':
         return create_demographic(demographic.getLocations(), demographic.getDepartments(), data)
     elif tab == 'tab5':
-        return html.Div([html.H4('Tab 5 Content')])
+        return create_days_r(daysDep)
     elif tab == 'tab6':
-        return create_proves(provesData.getProvesType(), provesData.getDepartments(), 'PR', geojson, provesData.getData())           
+        return utils_cons.build_tab_consumos()
 #endregion 
 
 #region Callback Demographic
@@ -125,6 +140,14 @@ def display_click_data(clickData):
 def actualizar_grafico(sel_digital,sel_cat, sel_subcat,sel_nac,sel_gRegion, sel_region):
     return [utils_cons.fx_actualizar_grafico_compras(sel_digital,sel_cat,sel_subcat,sel_nac,sel_gRegion,sel_region,valor='transacciones'),
            utils_cons.fx_actualizar_grafico_compras(sel_digital,sel_cat,sel_subcat,sel_nac,sel_gRegion,sel_region,valor='monto')]
+#endregion
+
+#region Callback Letalidad
+@app.callback(Output('graph_bar', 'figure'),
+              [Input('dd-dep-plot', 'value')])
+def render_letalidad(deps):
+    data = letalidad.getInfo(deps)
+    return create_barplot_layout(data)
 #endregion
 
 
