@@ -23,7 +23,7 @@ def create_tabs():
         dcc.Tab(label='Comportamiento de Compras', value='tab6')
     ]
 
-    tabs = dcc.Tabs(id='tabs', value='tab6', children=tab_items)
+    tabs = dcc.Tabs(id='tabs', value='tab1', children=tab_items)
     content = html.Div(id='tabs-content')
 
     return [tabs, content]
